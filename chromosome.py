@@ -75,6 +75,8 @@ class Chromosome:
 
                         if current == neighbor:
                             fitness += 1
+                        elif current == 1 and neighbor != 0:
+                            fitness -= 2.7
                         
 
         self.fitness = fitness
