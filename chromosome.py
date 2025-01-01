@@ -49,13 +49,29 @@ class Chromosome:
     def compute_fitness(self):
         fitness = 0.0
 
-        directions = [
-            (-1, 0),   # Sus 
-            (1, 0),    # Jos 
-            (0, -1),   # Stânga 
-            (0, 1),    # Dreapta 
-        ]
+        # directions = [
+        #     (-1, 0),   # Sus 
+        #     (1, 0),    # Jos 
+        #     (0, -1),   # Stânga 
+        #     (0, 1),    # Dreapta 
+        # ]
         
+        directions = [
+            (-2, 0),   # Deasupra central
+            (-1, -1),  # Diagonala stânga sus
+            (-1, 0),   # Sus
+            (-1, 1),   # Diagonala dreapta sus
+            (0, -2),   # Stânga extremă
+            (0, -1),   # Stânga
+            (0, 1),    # Dreapta
+            (0, 2),    # Dreapta extremă
+            (1, -1),   # Diagonala stânga jos
+            (1, 0),    # Jos
+            (1, 1),    # Diagonala dreapta jos
+            (2, 0)     # Sub central
+        ]
+
+
         for i in range(self.no_genes):
             for j in range(self.no_genes):
                 current = self.genes[i][j]
@@ -64,6 +80,10 @@ class Chromosome:
                     fitness += 2.5
                 elif current == 3:
                     fitness += 2.3
+                elif current == 4:
+                    fitness += 0.3
+                elif current == 5:
+                    fitness -= 1.3
                 else:
                     fitness -= 3.1
 
@@ -73,7 +93,7 @@ class Chromosome:
                     if 0 <= ni < self.no_genes and 0 <= nj < self.no_genes:
                         neighbor = self.genes[ni][nj]
 
-                        if current == neighbor:
+                        if current == neighbor and current != 5:
                             fitness += 1
                         elif current == 1 and neighbor != 0:
                             fitness -= 2.7
