@@ -49,60 +49,133 @@ class Chromosome:
     def compute_fitness(self):
         fitness = 0.0
 
-        # Direcțiile vecinătății (sus, jos, stânga, dreapta + diagonale)
         directions = [
             (-1, 0),   # Sus 
             (1, 0),    # Jos 
             (0, -1),   # Stânga 
             (0, 1),    # Dreapta 
-            (-1, -1),  # Sus-Stânga
-            (-1, 1),   # Sus-Dreapta
-            (1, -1),   # Jos-Stânga
-            (1, 1),    # Jos-Dreapta
+        ]
+        
+        directions_extreme = [
+            (-2, 0),   # Deasupra central
+            (-1, -1),  # Diagonala stânga sus
+            (-1, 1),   # Diagonala dreapta sus
+            (0, -2),   # Stânga extremă
+            (0, 2),    # Dreapta extremă
+            (1, -1),   # Diagonala stânga jos
+            (1, 1),    # Diagonala dreapta jos
+            (2, 0)     # Sub central
         ]
 
-        # Verifică vecinii direcți
+
+
         for i in range(self.no_genes):
             for j in range(self.no_genes):
                 current = self.genes[i][j]
-                neighbor_counts = {k: 0 for k in range(6)}  # Contor pentru fiecare tip de vecin
 
-                # Verifică vecinii direcți
+                if current==0:
+                    fitness+= 5.7
+                elif current==1:
+                    fitness+=0.3
+                elif current==3:
+                    fitness+= 4.3
+                elif current==2 or current==4:
+                    fitness+=2.5
+                elif current==5:
+                    fitness+1.3
+
                 for di, dj in directions:
                     ni, nj = i + di, j + dj
+                    
                     if 0 <= ni < self.no_genes and 0 <= nj < self.no_genes:
                         neighbor = self.genes[ni][nj]
-                        neighbor_counts[neighbor] += 1  # Numără fiecare tip de vecin
 
-                # Condiții pentru fiecare tip de teren
-                if current == 0:  # Apă
-                    fitness += 10 * neighbor_counts[0]  # Grupuri mari de apă
-                    if neighbor_counts[1] > 0:  # Plaja lângă apă
-                        fitness += 2  # Favorizează plaja lângă apă
-                elif current == 1:  # Plajă
-                    if neighbor_counts[0] == 0:  # Plaja fără apă
-                        fitness -= 20  # Penalizează dacă nu are vecin apă
-                    else:
-                        fitness += 5  # Favorizează plaja lângă apă
-                elif current == 2:  # Deșert
-                    fitness += 5 * neighbor_counts[2]  # Grupuri mari de deșert
-                    if neighbor_counts[1] > 0 or neighbor_counts[3] > 0:  # Lângă plajă sau câmpie
-                        fitness += 3
-                    else:
-                        fitness -= 5  # Penalizează dacă nu este lângă plajă/câmpie
-                elif current == 3:  # Câmpie
-                    if neighbor_counts[1] > 0 or neighbor_counts[4] > 0:  # Lângă plajă sau pădure
-                        fitness += 4
-                    fitness += neighbor_counts[3]  # Grupuri mari de câmpie
-                elif current == 4:  # Pădure
-                    if neighbor_counts[3] > 0 or neighbor_counts[5] > 0:  # Lângă câmpie sau munte
-                        fitness += 3
-                    fitness += neighbor_counts[4]  # Grupuri mari de pădure
-                elif current == 5:  # Munte
-                    if neighbor_counts[5] > 2:  # Penalizează grupuri mari de munte
-                        fitness -= 10
-                    else:
-                        fitness += 2  # Favorizează muntele izolat
+                        if current == 0 and neighbor == 0:
+                            fitness+=6.2
+                        elif current == 0 and neighbor == 1:
+                            fitness+=4.3
+                        elif current == 0 and neighbor > 1:
+                            fitness= fitness if fitness<0 else -fitness
+
+                        if current == 1 and neighbor == 1:
+                            fitness+=0.3
+                        elif current == 1 and neighbor == 0:
+                            fitness+=6.2
+                        elif current == 1 and neighbor > 1:
+                            fitness-=20.5
+
+                        if current == 2 and neighbor == 2:
+                            fitness+=2.3
+                        elif current == 2 and neighbor == 1:
+                            fitness+=0.3
+                        elif current == 2 and (neighbor == 0 or neighbor > 3):
+                            fitness-=7.3
+
+                        if current == 3 and neighbor == 3:
+                            fitness+=3.3
+                        elif current == 3 and neighbor == 2:
+                            fitness-=2.3
+                        elif current == 3 and neighbor !=2:
+                            fitness+=6.3
+                        elif current == 3 and (neighbor == 1 or neighbor == 4):
+                            fitness+=3.3
+                        elif current == 3 and neighbor == 5:
+                            fitness-=1.2
+
+                        if current == 4 and neighbor == 4:
+                            fitness+=2.3
+                        elif current == 4 and neighbor == 3:
+                            fitness+=3
+                        elif current == 4 and neighbor == 5:
+                            fitness+=3.5
+                        elif current == 4 and neighbor == 2:
+                            fitness-=5.4
+
+                        if current == 5 and neighbor == 5:
+                            fitness+= 1.3
+                        elif current == 5 and neighbor == 4:
+                            fitness+= 4.5
+                        elif current == 5 and neighbor < 4:
+                            fitness-=2.7
+
+                        for ddi, ddj in directions:
+                            nni, nnj = i+ddi, j+ddj
+
+                            if 0 <= nni < self.no_genes and 0 <= nnj < self.no_genes:
+                                nneighbor = self.genes[nni][nnj]
+
+                                if current == 0 and neighbor == 0 and (neighbor == 0 or neighbor == 1):
+                                    fitness += 12.3
+                                elif current == 0 and neighbor > 1 and nneighbor < 2:
+                                    fitness -= 20.7
+
+                                if current == 1 and neighbor > 1 and nneighbor == 1:
+                                    fitness -= 9.7
+                                elif current == 1 and neighbor > 1 and nneighbor >0:
+                                    fitness -= 9.9
+                                elif current == 1 and neighbor == 0 and nneighbor == 0:
+                                    fitness += 10.9
+                                elif current == 1 and neighbor > 1 and neighbor !=0:
+                                    fitness == fitness*fitness * -1
+
+                                if current == 2 and neighbor != 2 and nneighbor == 2:
+                                    fitness -= 4.5
+
+                                if current == 3 and neighbor == 3 and nneighbor == 3:
+                                    fitness +=7.3
+                                elif current == 3 and neighbor == 2 and neighbor == 0:
+                                    fitness -=5.4
+
+                                if current == 4 and neighbor == 4 and nneighbor == 4:
+                                    fitness+=4
+                                elif current == 4 and neighbor == 5 and neighbor == 0:
+                                    fitness-=7.3
+
+                                if current == 5 and neighbor == 5 and nneighbor == 5:
+                                    fitness-=2.5
+                                elif current == 5 and neighbor != 5 and nneighbor !=5:
+                                    fitness-=4.3
+                        
 
         self.fitness = fitness
         return self.fitness
