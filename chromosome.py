@@ -40,48 +40,21 @@ class Chromosome:
             for j in range(self.no_genes):
                 current = self.genes[i][j]
 
+                if current == 0:
+                    fitness += 2.5
+                elif current == 3:
+                    fitness += 2.3
+                else:
+                    fitness -= 3.1
+
                 for di, dj in directions:
                     ni, nj = i + di, j + dj
                     
                     if 0 <= ni < self.no_genes and 0 <= nj < self.no_genes:
                         neighbor = self.genes[ni][nj]
 
-                        # Regula 1: Valori egale apropiate
                         if current == neighbor:
-                            fitness += 5
-                        
-                        # Regula 2: Apa lângă orice biome
-                        if current == 0 or neighbor == 0:
                             fitness += 1
-                        
-                        # Regula 3: Munte lângă pădure
-                        if (current == 5 and neighbor == 4) or (current == 4 and neighbor == 5):
-                            fitness += 0.7
-                        
-                        # Regula 4: Pădure lângă câmpie
-                        if (current == 4 and neighbor == 3) or (current == 3 and neighbor == 4):
-                            fitness += 1
-                        
-                        # Regula 5: Plajă lângă apă
-                        if current == 1 and neighbor != 0:
-                            fitness -= 2 
-
-                        # Regula 6: Apă în deșert
-                        if current == 2 and neighbor == 0:
-                            fitness -= 1
-
-                        # Regula 7: Câmpie lângă plajă
-                        if current == 3 and neighbor == 1:
-                            fitness += 1
-
-                        # Regula 8: Deșert lângă deșert
-                        if current == 2 and neighbor == 2:
-                            fitness += 4
-                        
-                        # Regula 9: Deșert lângă plajă sau câmpie
-                        if current == 2 and (neighbor == 1 or neighbor == 3):
-                            fitness += 1
-                        
                         
 
         self.fitness = fitness
