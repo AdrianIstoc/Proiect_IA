@@ -5,7 +5,6 @@ import numpy as np
 
 class Selection:
     def tournament(first: Chromosome, second:Chromosome) -> Chromosome:
-
         return first.__copy__() if first.fitness > second.fitness else second.__copy__()
     
     # def get_best(population: List[Chromosome]) -> Chromosome:
@@ -16,7 +15,7 @@ class Crossover:
         k = random.randint(0, mama.no_genes)
         child = np.zeros((mama.no_genes, mama.no_genes))
         for i in range(mama.no_genes):
-            if random.random() < CR or i==k:
+            if random.random() < CR or i == k:
                 child[i] = mama.genes[i]
             else:
                 child[i] = papa.genes[i]

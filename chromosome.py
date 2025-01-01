@@ -26,16 +26,16 @@ class Chromosome:
         fitness = 0.0
 
         directions = [
-            (-1, 0),   # Sus (Nord)
-            (1, 0),    # Jos (Sud)
-            (0, -1),   # Stânga (Vest)
-            (0, 1),    # Dreapta (Est)
-            (-1, -1),  # Sus-Stânga (Nord-Vest)
-            (-1, 1),   # Sus-Dreapta (Nord-Est)
-            (1, -1),   # Jos-Stânga (Sud-Vest)
-            (1, 1),    # Jos-Dreapta (Sud-Est)
+            (-1, 0),   # Sus 
+            (1, 0),    # Jos 
+            (0, -1),   # Stânga 
+            (0, 1),    # Dreapta 
+            (-1, -1),  # Sus-Stânga 
+            (-1, 1),   # Sus-Dreapta 
+            (1, -1),   # Jos-Stânga 
+            (1, 1),    # Jos-Dreapta 
         ]
-
+        
         for i in range(self.no_genes):
             for j in range(self.no_genes):
                 current = self.genes[i][j]
@@ -48,19 +48,19 @@ class Chromosome:
 
                         # Regula 1: Valori egale apropiate
                         if current == neighbor:
-                            fitness += 100
+                            fitness += 5
                         
                         # Regula 2: Apa lângă orice biome
                         if current == 0 or neighbor == 0:
-                            fitness += 0.3
+                            fitness += 1
                         
                         # Regula 3: Munte lângă pădure
                         if (current == 5 and neighbor == 4) or (current == 4 and neighbor == 5):
-                            fitness += 0.55
+                            fitness += 0.7
                         
                         # Regula 4: Pădure lângă câmpie
                         if (current == 4 and neighbor == 3) or (current == 3 and neighbor == 4):
-                            fitness += 0.75
+                            fitness += 1
                         
                         # Regula 5: Plajă lângă apă
                         if current == 1 and neighbor != 0:
@@ -68,19 +68,21 @@ class Chromosome:
 
                         # Regula 6: Apă în deșert
                         if current == 2 and neighbor == 0:
-                            fitness -= 0.5
+                            fitness -= 1
 
                         # Regula 7: Câmpie lângă plajă
                         if current == 3 and neighbor == 1:
-                            fitness += 0.7
+                            fitness += 1
 
                         # Regula 8: Deșert lângă deșert
                         if current == 2 and neighbor == 2:
-                            fitness += 1
+                            fitness += 4
                         
                         # Regula 9: Deșert lângă plajă sau câmpie
                         if current == 2 and (neighbor == 1 or neighbor == 3):
                             fitness += 1
+                        
+                        
 
         self.fitness = fitness
         return self.fitness

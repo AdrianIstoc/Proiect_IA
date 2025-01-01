@@ -5,23 +5,24 @@ from matplotlib.colors import ListedColormap
 
 
 biomes = {
-    "blue": 0, # Apa 
-    "yellow":  1, # Plaja
-    "orange": 2, # Desert
+    "blue": 0,       # Apa 
+    "yellow": 1,     # Plaja
+    "orange": 2,     # Desert
     "lightgreen": 3, # Campie
-    "green": 4, # Padure
-    "grey": 5, # Munte
+    "green": 4,      # Padure
+    "grey": 5,       # Munte
 }
 
-def create_chromosome(no_genes: int = 20, min:int = 0, max:int = 5):
+def create_chromosome(no_genes: int = 10, min:int = 0, max:int = 5):
     return Chromosome(no_genes=no_genes, min=min, max=max)
 
 if __name__ == "__main__":
-    population_size = 20
-    generations = 50
-    population = [create_chromosome() for _ in range(population_size)]
-    F = 0.7
-    CR = 1.0
+    population_size = 35
+    generations = 150
+    no_genes = 20
+    population = [create_chromosome(no_genes) for _ in range(population_size)]
+    F = 1.1
+    CR = 0.7
 
     for individual in population:
         individual.compute_fitness()
@@ -49,7 +50,7 @@ if __name__ == "__main__":
     print("Fitness final:", best_chromo.fitness)
 
     # Creează lista de culori pe baza ordinii valorilor
-    colors = [color for color, value in sorted(biomes.items(), key=lambda item: item[1])]
+    colors = [color for color, _ in sorted(biomes.items(), key=lambda item: item[1])]
 
     # Creează colormap-ul
     cmap = ListedColormap(colors)
