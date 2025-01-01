@@ -30,7 +30,8 @@ class Mutation:
         
         donor = np.abs(np.round(
             population[r1].genes + F * (population[r2].genes - population[r3].genes)
-            ))
+        ))
+        
         original = population[i]
         donor = np.clip(donor, original.min, original.max)
 
