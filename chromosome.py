@@ -36,15 +36,15 @@ class Chromosome:
             (1, 1),    # Jos-Dreapta (Sud-Est)
         ]
 
-        for i in range(n):
-            for j in range(n):
-                current = genes[i][j]
+        for i in range(self.no_genes):
+            for j in range(self.no_genes):
+                current = self.genes[i][j]
 
                 for di, dj in directions:
                     ni, nj = i + di, j + dj
                     
-                    if 0 <= ni < n and 0 <= nj < n:
-                        neighbor = genes[ni][nj]
+                    if 0 <= ni < self.no_genes and 0 <= nj < self.no_genes:
+                        neighbor = self.genes[ni][nj]
 
                         # Regula 1: Valori egale apropiate
                         if current == neighbor:
@@ -83,3 +83,4 @@ class Chromosome:
                             fitness += 0.3
 
         self.fitness = fitness
+        return self.fitness
