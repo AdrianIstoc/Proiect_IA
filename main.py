@@ -1,16 +1,19 @@
 from chromosome import Chromosome
 from differential import Crossover, Mutation, Selection
+import matplotlib.pyplot as plt
+from matplotlib.colors import ListedColormap
+
 
 biomes = {
-    0, # Apa 
-    1, # Plaja
-    2, # Desert
-    3, # Campie
-    4, # Padure
-    5, # Munte
+    "blue": 0, # Apa 
+    "yellow":  1, # Plaja
+    "orange": 2, # Desert
+    "lightgreen": 3, # Campie
+    "green": 4, # Padure
+    "grey": 5, # Munte
 }
 
-def create_chromosome(no_genes: int = 10, min:int = 0, max:int = 5):
+def create_chromosome(no_genes: int = 20, min:int = 0, max:int = 5):
     return Chromosome(no_genes=no_genes, min=min, max=max)
 
 if __name__ == "__main__":
@@ -18,7 +21,7 @@ if __name__ == "__main__":
     generations = 50
     population = [create_chromosome() for _ in range(population_size)]
     F = 0.7
-    CR = 0.8
+    CR = 1.0
 
     for individual in population:
         individual.compute_fitness()
@@ -44,3 +47,20 @@ if __name__ == "__main__":
     print("\nCea mai bună mapă generată:")
     print(best_chromo.genes)
     print("Fitness final:", best_chromo.fitness)
+
+    # Creează lista de culori pe baza ordinii valorilor
+    colors = [color for color, value in sorted(biomes.items(), key=lambda item: item[1])]
+
+    # Creează colormap-ul
+    cmap = ListedColormap(colors)
+
+    plt.figure(figsize=(best_chromo.no_genes, best_chromo.no_genes))
+
+    # Desenează matricea
+    plt.imshow(best_chromo.genes, cmap=cmap, interpolation='nearest')
+
+    # Adaugă o bară de culori pentru referință
+    colorbar = plt.colorbar(ticks=range(6))
+    colorbar.ax.set_yticklabels([str(i) for i in range(6)])
+
+    plt.show()

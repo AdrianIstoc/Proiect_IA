@@ -48,15 +48,15 @@ class Chromosome:
 
                         # Regula 1: Valori egale apropiate
                         if current == neighbor:
-                            fitness += 1
+                            fitness += 100
                         
                         # Regula 2: Apa lângă orice biome
                         if current == 0 or neighbor == 0:
-                            fitness += 0.5
+                            fitness += 0.3
                         
                         # Regula 3: Munte lângă pădure
                         if (current == 5 and neighbor == 4) or (current == 4 and neighbor == 5):
-                            fitness += 0.75
+                            fitness += 0.55
                         
                         # Regula 4: Pădure lângă câmpie
                         if (current == 4 and neighbor == 3) or (current == 3 and neighbor == 4):
@@ -68,19 +68,19 @@ class Chromosome:
 
                         # Regula 6: Apă în deșert
                         if current == 2 and neighbor == 0:
-                            fitness -= 0.2
+                            fitness -= 0.5
 
                         # Regula 7: Câmpie lângă plajă
                         if current == 3 and neighbor == 1:
-                            fitness += 0.4
+                            fitness += 0.7
 
                         # Regula 8: Deșert lângă deșert
                         if current == 2 and neighbor == 2:
-                            fitness += 0.5
+                            fitness += 1
                         
                         # Regula 9: Deșert lângă plajă sau câmpie
                         if current == 2 and (neighbor == 1 or neighbor == 3):
-                            fitness += 0.3
+                            fitness += 1
 
         self.fitness = fitness
         return self.fitness
