@@ -49,54 +49,60 @@ class Chromosome:
     def compute_fitness(self):
         fitness = 0.0
 
-        # directions = [
-        #     (-1, 0),   # Sus 
-        #     (1, 0),    # Jos 
-        #     (0, -1),   # Stânga 
-        #     (0, 1),    # Dreapta 
-        # ]
-        
+        # Direcțiile vecinătății (sus, jos, stânga, dreapta + diagonale)
         directions = [
-            (-2, 0),   # Deasupra central
-            (-1, -1),  # Diagonala stânga sus
-            (-1, 0),   # Sus
-            (-1, 1),   # Diagonala dreapta sus
-            (0, -2),   # Stânga extremă
-            (0, -1),   # Stânga
-            (0, 1),    # Dreapta
-            (0, 2),    # Dreapta extremă
-            (1, -1),   # Diagonala stânga jos
-            (1, 0),    # Jos
-            (1, 1),    # Diagonala dreapta jos
-            (2, 0)     # Sub central
+            (-1, 0),   # Sus 
+            (1, 0),    # Jos 
+            (0, -1),   # Stânga 
+            (0, 1),    # Dreapta 
+            (-1, -1),  # Sus-Stânga
+            (-1, 1),   # Sus-Dreapta
+            (1, -1),   # Jos-Stânga
+            (1, 1),    # Jos-Dreapta
         ]
 
-
+        # Verifică vecinii direcți
         for i in range(self.no_genes):
             for j in range(self.no_genes):
                 current = self.genes[i][j]
+                neighbor_counts = {k: 0 for k in range(6)}  # Contor pentru fiecare tip de vecin
 
-                if current == 0:
-                    fitness += 2.5
-                elif current == 3:
-                    fitness += 2.3
-                elif current == 4:
-                    fitness += 0.3
-                elif current == 5:
-                    fitness -= 1.3
-                else:
-                    fitness -= 3.1
-
+                # Verifică vecinii direcți
                 for di, dj in directions:
                     ni, nj = i + di, j + dj
-                    
                     if 0 <= ni < self.no_genes and 0 <= nj < self.no_genes:
                         neighbor = self.genes[ni][nj]
+                        neighbor_counts[neighbor] += 1  # Numără fiecare tip de vecin
 
-                        if current == neighbor and current != 5:
-                            fitness += 1
-                        elif current == 1 and neighbor != 0:
-                            fitness -= 2.7
-                        
+                # Condiții pentru fiecare tip de teren
+                if current == 0:  # Apă
+                    fitness += 10 * neighbor_counts[0]  # Grupuri mari de apă
+                    if neighbor_counts[1] > 0:  # Plaja lângă apă
+                        fitness += 2  # Favorizează plaja lângă apă
+                elif current == 1:  # Plajă
+                    if neighbor_counts[0] == 0:  # Plaja fără apă
+                        fitness -= 20  # Penalizează dacă nu are vecin apă
+                    else:
+                        fitness += 5  # Favorizează plaja lângă apă
+                elif current == 2:  # Deșert
+                    fitness += 5 * neighbor_counts[2]  # Grupuri mari de deșert
+                    if neighbor_counts[1] > 0 or neighbor_counts[3] > 0:  # Lângă plajă sau câmpie
+                        fitness += 3
+                    else:
+                        fitness -= 5  # Penalizează dacă nu este lângă plajă/câmpie
+                elif current == 3:  # Câmpie
+                    if neighbor_counts[1] > 0 or neighbor_counts[4] > 0:  # Lângă plajă sau pădure
+                        fitness += 4
+                    fitness += neighbor_counts[3]  # Grupuri mari de câmpie
+                elif current == 4:  # Pădure
+                    if neighbor_counts[3] > 0 or neighbor_counts[5] > 0:  # Lângă câmpie sau munte
+                        fitness += 3
+                    fitness += neighbor_counts[4]  # Grupuri mari de pădure
+                elif current == 5:  # Munte
+                    if neighbor_counts[5] > 2:  # Penalizează grupuri mari de munte
+                        fitness -= 10
+                    else:
+                        fitness += 2  # Favorizează muntele izolat
 
         self.fitness = fitness
+        return self.fitness
