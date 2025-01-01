@@ -1,28 +1,52 @@
 import numpy as np
 
 class Chromosome:
-    def __init__(self, no_genes: int, genes:np.ndarray[int] = None, fitness: float = 0.0, min : int = 0, max: int = 5):
+    def __init__(self, no_genes: int, genes: np.ndarray[int] = None, fitness: float = 0.0, min: int = 0, max: int = 5):
         self.no_genes = no_genes
         self.min = min
         self.max = max
         self.fitness = fitness
 
-        if genes is None :
-            self.genes = np.random.randint(low = min, high = max+1, size = (no_genes, no_genes))
+        if genes is None:
+            self.genes = np.random.randint(low=min, high=max + 1, size=(no_genes, no_genes))
         else:
             self.genes = genes
 
     def __copy__(self):
-        return Chromosome(self.no_genes, self.genes, self.fitness, self.min, self.max)
-    
+        return Chromosome(self.no_genes, self.genes.copy(), self.fitness, self.min, self.max)
+
     def copy_from(self, other):
         self.no_genes = other.no_genes
-        self.genes = other.genes
+        self.genes = other.genes.copy()
         self.min = other.min
         self.max = other.max
         self.fitness = other.fitness
 
-    def compute_fitness(self) -> float:
+    import numpy as np
+
+class Chromosome:
+    def __init__(self, no_genes: int, genes: np.ndarray[int] = None, fitness: float = 0.0, min: int = 0, max: int = 5):
+        self.no_genes = no_genes
+        self.min = min
+        self.max = max
+        self.fitness = fitness
+
+        if genes is None:
+            self.genes = np.random.randint(low=min, high=max + 1, size=(no_genes, no_genes))
+        else:
+            self.genes = genes
+
+    def __copy__(self):
+        return Chromosome(self.no_genes, self.genes.copy(), self.fitness, self.min, self.max)
+
+    def copy_from(self, other):
+        self.no_genes = other.no_genes
+        self.genes = other.genes.copy()
+        self.min = other.min
+        self.max = other.max
+        self.fitness = other.fitness
+
+    def compute_fitness(self):
         fitness = 0.0
 
         directions = [
@@ -30,10 +54,6 @@ class Chromosome:
             (1, 0),    # Jos 
             (0, -1),   # Stânga 
             (0, 1),    # Dreapta 
-            (-1, -1),  # Sus-Stânga 
-            (-1, 1),   # Sus-Dreapta 
-            (1, -1),   # Jos-Stânga 
-            (1, 1),    # Jos-Dreapta 
         ]
         
         for i in range(self.no_genes):
@@ -81,8 +101,5 @@ class Chromosome:
                         # Regula 9: Deșert lângă plajă sau câmpie
                         if current == 2 and (neighbor == 1 or neighbor == 3):
                             fitness += 1
-                        
-                        
 
         self.fitness = fitness
-        return self.fitness
