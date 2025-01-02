@@ -70,8 +70,8 @@ if __name__ == "__main__":
 
     best_chromo = diferential_evolution(
         no_genes=10,
-        population_size=10,
-        generations=200,
+        population_size=15,
+        generations=500,
         F = 1.3,
         CR = 0.8,
     )
