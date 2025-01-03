@@ -68,10 +68,6 @@ class Chromosome:
                     current_value = genes_2d[i, j]
                     biomes[current_value] += 1
 
-                    beach_neighbors = False
-                    desert_neighbors = False
-                    mountain_neighbors = False
-
                     for di, dj in directions:
                         ni, nj = i + di, j + dj
                         if 0 <= ni < rows and 0 <= nj < cols:
@@ -79,30 +75,22 @@ class Chromosome:
                             
                             # valori similare apropiate
                             if current_value == neighbor_value:
-                                fitness += 5
+                                fitness += 3
 
                             # Regula 1: DA Plaja lângă Apa
                             if current_value == 1: 
                                 if neighbor_value == 0:
-                                    beach_neighbors = True
+                                    local_rule_penalty += 10
 
                             # Regula 2: NU Desert lângă Apa
                             if current_value == 2:
                                 if neighbor_value == 0: 
-                                    desert_neighbors = True
+                                    local_rule_penalty += 10
 
                             # Regula 3: DA Munte lângă Padure
                             if current_value == 5:
                                 if neighbor_value == 4:  
-                                    mountain_neighbors = True
-
-                    # Penalizari pentru nerespectarea regulilor
-                    if current_value == 1 and not beach_neighbors:
-                        local_rule_penalty += 10
-                    if current_value == 2 and desert_neighbors:
-                        local_rule_penalty += 10
-                    if current_value == 5 and not mountain_neighbors:
-                        local_rule_penalty += 10
+                                    local_rule_penalty += 10
 
             missing_biomes = sum(1 for biome in biomes if biome == 0)
             diversity_penalty += missing_biomes * 100
@@ -110,7 +98,7 @@ class Chromosome:
             total_cells = rows * cols
             for biome in biomes:
                 proportion = biome / total_cells
-                if proportion > 0.30:
-                    diversity_penalty += (proportion - 0.30) * 2000
+                if proportion > 0.25:
+                    diversity_penalty += (proportion - 0.25) * 3000
 
             self.fitness = -fitness + diversity_penalty + local_rule_penalty
