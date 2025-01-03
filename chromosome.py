@@ -44,48 +44,61 @@ class Chromosome:
 
             fitness = 0
             diversity_penalty = 0
-            local_rule_penalty = 0  
-            counts = np.zeros(6)  
+            local_rule_penalty = 0
+            counts = np.zeros(6)
             
             rows, cols = genes_2d.shape
+
+            directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+
             for i in range(rows):
                 for j in range(cols):
                     current_value = genes_2d[i, j]
                     counts[current_value] += 1
 
-                    if j + 1 < cols and genes_2d[i, j + 1] == current_value:
-                        fitness += 2
+                    beach_neighbors = False
+                    desert_neighbors = False
+                    mountain_neighbors = False
 
-                    if i + 1 < rows and genes_2d[i + 1, j] == current_value:
-                        fitness += 2
+                    for di, dj in directions:
+                        ni, nj = i + di, j + dj
+                        if 0 <= ni < rows and 0 <= nj < cols:
+                            neighbor_value = genes_2d[ni, nj]
+                            
+                            # valori similare apropiate
+                            if current_value == neighbor_value:
+                                fitness += 2
 
-                    # Regula 1: Beach  trebuie să fie lângă Water
-                    if current_value == 1:  
-                        if not any(genes_2d[i + di, j + dj] == 0 for di in [-1, 0, 1] if 0 <= i + di < rows for dj in [-1, 0, 1] if 0 <= j + dj < cols):
-                            local_rule_penalty += 10  
+                            # Regula 1: Plaja trebuie să fie lângă Apa
+                            if current_value == 1: 
+                                if neighbor_value == 0:
+                                    beach_neighbors = True
 
-                    # Regula 2: Mountain trebuie să fie lângă Forest
-                    if current_value == 5:  # Mountain
-                        if not any(genes_2d[i + di, j + dj] == 4 for di in [-1, 0, 1] if 0 <= i + di < rows for dj in [-1, 0, 1] if 0 <= j + dj < cols):
-                            local_rule_penalty += 10  
+                            # Regula 2: Desert trebuie să nu fie lângă Apa
+                            if current_value == 2:
+                                if neighbor_value == 0: 
+                                    desert_neighbors = True
 
-            # Penalizare pentru absența unui biome
+                            # Regula 3: Munte trebuie să fie lângă Padure
+                            if current_value == 5:
+                                if neighbor_value == 4:  
+                                    mountain_neighbors = True
+
+                    # Penalizari pentru nerespectarea regulilor
+                    if current_value == 1 and not beach_neighbors:
+                        local_rule_penalty += 10
+                    if current_value == 2 and desert_neighbors:
+                        local_rule_penalty += 10
+                    if current_value == 5 and not mountain_neighbors:
+                        local_rule_penalty += 10
+
             missing_biomes = sum(1 for count in counts if count == 0)
-            diversity_penalty += missing_biomes * 100  
+            diversity_penalty += missing_biomes * 100
 
-            # Penalizăm dominarea unui biome
             total_cells = rows * cols
             for count in counts:
                 proportion = count / total_cells
-                if proportion > 0.30:  
-                    diversity_penalty += (proportion - 0.30) * 1000  
+                if proportion > 0.30:
+                    diversity_penalty += (proportion - 0.30) * 1000
 
-            # Penalizăm concentrațiile mari ale unui singur biome
-            for count in counts:
-                proportion = count / total_cells
-                diversity_penalty += proportion ** 2 
-
-            # Fitness combinat: favorizăm coerența locală, diversitatea globală și respectarea regulilor
             self.fitness = -fitness + diversity_penalty + local_rule_penalty
-
-

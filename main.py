@@ -21,8 +21,8 @@ if __name__ == "__main__":
 
     best_chromo = diferential_evolution(
         no_genes = 10,
-        population_size = 500,
-        generations = 500,
+        population_size = 200,
+        generations = 300,
         F = 1.2,
         CR = 0.9,
         mini = 0,
@@ -36,4 +36,4 @@ if __name__ == "__main__":
     # # Testeaza functia de fitness pe o harta considerata buna 
     test_ideal_mat_fitness(cmap)
     test_rnd_mat_fitness(cmap)
-    test_dif_func()
+    #test_dif_func()
