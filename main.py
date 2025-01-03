@@ -1,9 +1,9 @@
-import numpy as np
 from chromosome import Chromosome
-from differential import Crossover, Mutation, Selection
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 
+from differential import create_chromosome, diferential_evolution
+from tests import test_dif_func, test_ideal_mat_fitness, test_rnd_mat_fitness
 
 biomes = {
     "blue": 0,       # Apa 
@@ -14,71 +14,26 @@ biomes = {
     "grey": 5,       # Munte
 }
 
-def create_chromosome(no_genes: int = 10, min:int = 0, max:int = 5):
-    return Chromosome(no_genes=no_genes, min=min, max=max)
-
-def diferential_evolution(no_genes = 10, population_size = 50, 
-                          generations = 1000, F = 1.2, CR = 0.7):
-    
-    # Generăm populația inițială
-    population = [create_chromosome(no_genes) for _ in range(population_size)]
-
-    for chromo in population:
-        chromo.compute_fitness()
-    for gen in range(generations):
-        new_population = []
-
-        for i, chromo in enumerate(population):
-            donor: Chromosome = Mutation.self_referential(F, population, i)
-            trial: Chromosome = Crossover.binomial(chromo, donor, CR)
-            trial.compute_fitness()
-
-            new_population.append(Selection.tournament(trial, chromo))
-
-        population = new_population
-        best = max(population, key=lambda x: x.fitness)
-        print(f"Generația {gen + 1}: Cel mai bun Fitness = {best.fitness}")
-
-    best_chromo = max(population, key=lambda x: x.fitness)
-    print("------------------ Rezultate ------------------")
-    print("\nCea mai bună mapă generată:")
-    print(best_chromo.genes)
-
-    print("Fitness final:", best_chromo.fitness)
-
-    return best_chromo
-
-def test_fitness(cmap):
-    test_chromo = create_chromosome()
-    
-    with open('ideal.txt', 'r') as f:
-        test_mat = [[int(num) for num in line.split(' ')] for line in f]
-
-    test_chromo.genes = np.array(test_mat)
-    
-    print(test_chromo.genes)
-    test_chromo.compute_fitness()
-
-    plt.imshow(test_chromo.genes, cmap=cmap, interpolation='nearest')
-    print(f"Test Mat Fitness: {test_chromo.fitness}")
-    plt.show()
-
 if __name__ == "__main__":
     # Creează lista de culori pe baza ordinii valorilor
     colors = [color for color, _ in sorted(biomes.items(), key=lambda item: item[1])]
     cmap = ListedColormap(colors)
 
     best_chromo = diferential_evolution(
-        no_genes=10,
-        population_size=100,
-        generations=100,
-        F = 0.4,
-        CR = 0.7,
+        no_genes = 10,
+        population_size = 200,
+        generations = 300,
+        F = 1.2,
+        CR = 0.9,
+        mini = 0,
+        maxi = 5,
     )
 
     # Desenează matricea
     plt.imshow(best_chromo.genes, cmap=cmap, interpolation='nearest')
     plt.show()
 
-    # Testeaza functia de fitness pe o harta considerata buna 
-    test_fitness(cmap)
+    # # Testeaza functia de fitness pe o harta considerata buna 
+    test_ideal_mat_fitness(cmap)
+    test_rnd_mat_fitness(cmap)
+    #test_dif_func()
