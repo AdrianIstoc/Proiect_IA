@@ -34,17 +34,20 @@ def test_rnd_mat_fitness(cmap):
 
 def test_dif_func():
     test_chromo = diferential_evolution(
-        no_genes = 1,
-        population_size = 500,
-        generations = 50,
-        F = 1.2,
-        CR = 0.9,
-        mini = -5.0,
-        maxi = 5.0,
+        no_genes=5,  
+        population_size=500,
+        generations=200,
+        F=1.2,
+        CR=0.9,
+        mini=-5.12,
+        maxi=5.12,
+        run_mode = "test",
     )
 
     print("\n")
-    print(f"Rezultat  obtinut: {test_chromo.genes:.6f}, Fitness  obtinut: {test_chromo.fitness}")
-    chromo = Chromosome(no_genes=1, genes=-1.680494)
+    print(f"Obtained Result: {test_chromo.genes}, Obtained Fitness: {test_chromo.fitness}")
+
+    chromo = Chromosome(no_genes=5,
+                        genes=np.array([-0.01415396, -0.01852149, -0.01292912,  0.00729068,  0.00371603]), run_mode="test")
     chromo.compute_fitness()
-    print(f"Rezultat asteptat: {chromo.genes:.6f}, Fitness așteptat: {chromo.fitness}")
+    print(f"Rezultat asteptat: {chromo.genes}, Fitness așteptat: {chromo.fitness} (aproximativ in (0.1, 0.8))")

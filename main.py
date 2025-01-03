@@ -21,10 +21,10 @@ if __name__ == "__main__":
 
     best_chromo = diferential_evolution(
         no_genes = 10,
-        population_size = 100,
-        generations = 1000,
+        population_size = 500,
+        generations = 500,
         F = 1.2,
-        CR = 0.8,
+        CR = 0.9,
         mini = 0,
         maxi = 5,
     )
@@ -33,7 +33,7 @@ if __name__ == "__main__":
     plt.imshow(best_chromo.genes, cmap=cmap, interpolation='nearest')
     plt.show()
 
-    # Testeaza functia de fitness pe o harta considerata buna 
+    # # Testeaza functia de fitness pe o harta considerata buna 
     test_ideal_mat_fitness(cmap)
-    # test_rnd_mat_fitness(cmap)
-    # test_dif_func()
+    test_rnd_mat_fitness(cmap)
+    test_dif_func()
