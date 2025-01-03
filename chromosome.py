@@ -125,4 +125,8 @@ class Chromosome:
                 if proportion > 0.3:
                     diversity_penalty += (proportion - 0.3) * 3500
 
-            self.fitness = -(fitness + local_rule_bonus) + diversity_penalty + local_rule_penalty
+            self.fitness = (
+                    -(fitness + local_rule_bonus) 
+                    + diversity_penalty 
+                    + local_rule_penalty
+                )
