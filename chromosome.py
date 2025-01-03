@@ -57,6 +57,7 @@ class Chromosome:
             fitness = 0
             diversity_penalty = 0
             local_rule_penalty = 0
+            local_rule_bonus = 0
             biomes = np.zeros(6)
             
             rows, cols = genes_2d.shape
@@ -75,24 +76,49 @@ class Chromosome:
                             
                             # valori similare apropiate
                             if current_value == neighbor_value:
-                                fitness += 3
+                                fitness += 8
 
                             # Regula 1: DA Plaja lângă Apa
                             if current_value == 1: 
                                 if neighbor_value == 0:
-                                    fitness += 7
+                                    local_rule_bonus += 6
                                 else:
-                                    local_rule_penalty += 10
+                                    local_rule_penalty += 16
 
                             # Regula 2: NU Desert lângă Apa
                             if current_value == 2:
                                 if neighbor_value == 0: 
+                                    local_rule_penalty += 30
+                                else:
+                                    local_rule_bonus += 4
+                            
+                            # Regula 3: NU Desert lângă Padure
+                            if current_value == 2:
+                                if neighbor_value == 4: 
+                                    local_rule_penalty += 10
+                                else:
+                                    local_rule_bonus += 3
+
+                             # Regula 4: Da Campie lângă Padure
+                            if current_value == 3:
+                                if neighbor_value == 4:
+                                    local_rule_bonus += 8
+                                else:
                                     local_rule_penalty += 10
 
-                            # Regula 3: DA Munte lângă Padure
+                            # Regula 5: Da Campie lângă Desert
+                            if current_value == 3:
+                                if neighbor_value == 2:
+                                    local_rule_bonus += 8
+                                else:
+                                    local_rule_penalty += 10
+
+                            # Regula 6: DA Munte lângă Padure
                             if current_value == 5:
                                 if neighbor_value == 4:  
-                                    fitness += 4
+                                    local_rule_bonus += 7
+                                else:
+                                    local_rule_penalty += 10
 
             missing_biomes = sum(1 for biome in biomes if biome == 0)
             diversity_penalty += missing_biomes * 100
@@ -100,7 +126,7 @@ class Chromosome:
             total_cells = rows * cols
             for biome in biomes:
                 proportion = biome / total_cells
-                if proportion > 0.25:
-                    diversity_penalty += (proportion - 0.25) * 3000
+                if proportion > 0.3:
+                    diversity_penalty += (proportion - 0.3) * 3500
 
-            self.fitness = -fitness + diversity_penalty + local_rule_penalty
+            self.fitness = -(fitness + local_rule_bonus) + diversity_penalty + local_rule_penalty
