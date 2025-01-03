@@ -47,12 +47,8 @@ class Chromosome:
             self.fitness = n * A + np.sum(self.genes**2 - A * np.cos(omega * self.genes))
         else: 
             self.genes = np.clip(self.genes, 0, 5).astype(int)
-            
-            if self.genes.ndim == 1:
-                side_length = int(np.sqrt(len(self.genes)))
-                genes_2d = self.genes[:side_length**2].reshape(side_length, side_length)
-            else:
-                genes_2d = self.genes
+
+            genes = self.genes
 
             fitness = 0
             diversity_penalty = 0
@@ -60,28 +56,28 @@ class Chromosome:
             local_rule_bonus = 0
             biomes = np.zeros(6)
             
-            rows, cols = genes_2d.shape
+            rows, cols = genes.shape
 
             directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 
             for i in range(rows):
                 for j in range(cols):
-                    current_value = genes_2d[i, j]
+                    current_value = genes[i, j]
                     biomes[current_value] += 1
 
                     for di, dj in directions:
                         ni, nj = i + di, j + dj
                         if 0 <= ni < rows and 0 <= nj < cols:
-                            neighbor_value = genes_2d[ni, nj]
+                            neighbor_value = genes[ni, nj]
                             
                             # valori similare apropiate
                             if current_value == neighbor_value:
-                                fitness += 8
+                                fitness += 7
 
                             # Regula 1: DA Plaja lângă Apa
                             if current_value == 1: 
                                 if neighbor_value == 0:
-                                    local_rule_bonus += 6
+                                    local_rule_bonus += 1
                                 else:
                                     local_rule_penalty += 16
 
@@ -90,33 +86,33 @@ class Chromosome:
                                 if neighbor_value == 0: 
                                     local_rule_penalty += 30
                                 else:
-                                    local_rule_bonus += 4
+                                    local_rule_bonus += 2
                             
                             # Regula 3: NU Desert lângă Padure
                             if current_value == 2:
                                 if neighbor_value == 4: 
-                                    local_rule_penalty += 10
+                                    local_rule_penalty += 15
                                 else:
-                                    local_rule_bonus += 3
+                                    local_rule_bonus += 2
 
                              # Regula 4: Da Campie lângă Padure
                             if current_value == 3:
                                 if neighbor_value == 4:
-                                    local_rule_bonus += 8
+                                    local_rule_bonus += 5
                                 else:
-                                    local_rule_penalty += 10
+                                    local_rule_penalty += 20
 
                             # Regula 5: Da Campie lângă Desert
                             if current_value == 3:
                                 if neighbor_value == 2:
-                                    local_rule_bonus += 8
+                                    local_rule_bonus += 4
                                 else:
-                                    local_rule_penalty += 10
+                                    local_rule_penalty += 20
 
                             # Regula 6: DA Munte lângă Padure
                             if current_value == 5:
                                 if neighbor_value == 4:  
-                                    local_rule_bonus += 7
+                                    local_rule_bonus += 3
                                 else:
                                     local_rule_penalty += 10
 
