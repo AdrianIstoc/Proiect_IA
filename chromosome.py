@@ -80,6 +80,8 @@ class Chromosome:
                             # Regula 1: DA Plaja lângă Apa
                             if current_value == 1: 
                                 if neighbor_value == 0:
+                                    fitness += 7
+                                else:
                                     local_rule_penalty += 10
 
                             # Regula 2: NU Desert lângă Apa
@@ -90,7 +92,7 @@ class Chromosome:
                             # Regula 3: DA Munte lângă Padure
                             if current_value == 5:
                                 if neighbor_value == 4:  
-                                    local_rule_penalty += 10
+                                    fitness += 4
 
             missing_biomes = sum(1 for biome in biomes if biome == 0)
             diversity_penalty += missing_biomes * 100
