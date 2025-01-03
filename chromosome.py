@@ -28,6 +28,18 @@ class Chromosome:
         return Chromosome(self.no_genes, self.genes.copy(), self.fitness, self.min, self.max, self.run_mode)
 
     def compute_fitness(self):
+        """
+        Functia determina vloare de fitness a unui Chromozom
+
+        
+        Poate fi rulata in 2 moduri:
+            * \"dev\" - Modul normal de utilizare.
+            * \"test\" - In acest mod functia va calcula fitness-ul pentru functia Rastrigin.
+        
+        Valoare de fitness calculata va fi salvata in Chromozom.
+
+        O valoare mai mica este o valoare mai buna 
+        """
         if self.run_mode == "test":  
             n = self.no_genes
             A = 10
@@ -45,7 +57,7 @@ class Chromosome:
             fitness = 0
             diversity_penalty = 0
             local_rule_penalty = 0
-            counts = np.zeros(6)
+            biomes = np.zeros(6)
             
             rows, cols = genes_2d.shape
 
@@ -54,7 +66,7 @@ class Chromosome:
             for i in range(rows):
                 for j in range(cols):
                     current_value = genes_2d[i, j]
-                    counts[current_value] += 1
+                    biomes[current_value] += 1
 
                     beach_neighbors = False
                     desert_neighbors = False
@@ -67,19 +79,19 @@ class Chromosome:
                             
                             # valori similare apropiate
                             if current_value == neighbor_value:
-                                fitness += 2
+                                fitness += 5
 
-                            # Regula 1: Plaja trebuie să fie lângă Apa
+                            # Regula 1: DA Plaja lângă Apa
                             if current_value == 1: 
                                 if neighbor_value == 0:
                                     beach_neighbors = True
 
-                            # Regula 2: Desert trebuie să nu fie lângă Apa
+                            # Regula 2: NU Desert lângă Apa
                             if current_value == 2:
                                 if neighbor_value == 0: 
                                     desert_neighbors = True
 
-                            # Regula 3: Munte trebuie să fie lângă Padure
+                            # Regula 3: DA Munte lângă Padure
                             if current_value == 5:
                                 if neighbor_value == 4:  
                                     mountain_neighbors = True
@@ -92,13 +104,13 @@ class Chromosome:
                     if current_value == 5 and not mountain_neighbors:
                         local_rule_penalty += 10
 
-            missing_biomes = sum(1 for count in counts if count == 0)
+            missing_biomes = sum(1 for biome in biomes if biome == 0)
             diversity_penalty += missing_biomes * 100
 
             total_cells = rows * cols
-            for count in counts:
-                proportion = count / total_cells
+            for biome in biomes:
+                proportion = biome / total_cells
                 if proportion > 0.30:
-                    diversity_penalty += (proportion - 0.30) * 1000
+                    diversity_penalty += (proportion - 0.30) * 2000
 
             self.fitness = -fitness + diversity_penalty + local_rule_penalty
