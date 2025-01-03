@@ -1,9 +1,8 @@
-from chromosome import Chromosome
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 
-from differential import create_chromosome, diferential_evolution
-from tests import test_dif_func, test_ideal_mat_fitness, test_rnd_mat_fitness
+from differential import diferential_evolution
+from tests import test_ideal_mat_fitness, test_rnd_mat_fitness
 
 biomes = {
     "blue": 0,       # Apa 
