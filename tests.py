@@ -1,5 +1,6 @@
 from matplotlib import pyplot as plt
 import numpy as np
+import scipy as sp
 
 from chromosome import Chromosome
 from differential import create_chromosome, diferential_evolution
