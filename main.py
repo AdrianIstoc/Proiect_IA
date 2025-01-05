@@ -32,7 +32,7 @@ if __name__ == "__main__":
     plt.imshow(best_chromo.genes, cmap=cmap, interpolation='nearest')
     plt.show()
 
-    # # Testeaza functia de fitness pe o harta considerata buna 
+    # Testeaza functia de fitness pe o harta considerata buna 
     test_ideal_mat_fitness(cmap)
     test_rnd_mat_fitness(cmap)
     test_dif_func()

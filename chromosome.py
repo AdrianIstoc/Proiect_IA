@@ -40,12 +40,45 @@ class Chromosome:
 
         O valoare mai mica este o valoare mai buna 
         """
-        if self.run_mode == "test":  
+        if self.run_mode == "test":
+            # In modul de test algorimul are o complexitate de O(G) unde G este numarul de
+            # gene pe care le adunam, in cod notat ca no_genes. 
+            #
+            # In modul de test Genes va fi mereu un array
+            #
+            # Nu se face nici o optimizare bazata pe calitatea datelor prin urmare
+            # algortimul va avea urmatoarele complexitati:
+            #   - O(G) - in cel mai rau caz
+            #   - Omega(G) -  in cel mai bun caz
+            #   - Teta(G) - in cazul normal
+            #
+            # G = no_genes
+
             n = self.no_genes
             A = 10
             omega = 2 * np.pi
             self.fitness = n * A + np.sum(self.genes**2 - A * np.cos(omega * self.genes))
-        else: 
+        else:
+            # In modul de dev algorimul are o complexitate de O(G^2) unde G este numarul de
+            # gene parcurse, in cod notat ca no_genes. 
+            #
+            # In modul de dev Genes va fi mereu un matrice patratica de marimea no_genes x no_genes
+            #
+            # Cea mai complexa structura din algoritm este parcurgerea de gene, in cadrul aceste parcurgeri se afla si o bucla
+            # in care se verifica vecinii unui element din matrice insa aceasta bucla are mere
+            # doar 4 iteratii prin urmare parcurgerea de gene va avea o complexitate de O(G * G * 4) = O(G^2)
+            #
+            # Deoarece buclele de calcul pentru missing_biomes si diversity_penalty au mereu 6 iteratii (numarul de tipuri de teren)
+            # acestea ar fi doar O(6) deci le putem neglija in complexitatea finala
+            # 
+            # In cod nu se fac optimizari in plus bazate pe calitatea datelor parcurse.
+            #
+            # Astfel algortimul va avea urmatoarele complexitati:
+            #   - O(G^2) - in cel mai rau caz
+            #   - Omega(G^2) -  in cel mai bun caz
+            #   - Teta(G^2) - in cazul normal
+            #
+            # G = no_genes
             self.genes = np.clip(self.genes, 0, 5).astype(int)
 
             genes = self.genes
@@ -54,7 +87,7 @@ class Chromosome:
             diversity_penalty = 0
             local_rule_penalty = 0
             local_rule_bonus = 0
-            biomes = np.zeros(6)
+            biomes = np.zeros(self.max + 1)
             
             rows, cols = genes.shape
 
