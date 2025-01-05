@@ -1,5 +1,6 @@
 from matplotlib import pyplot as plt
 import numpy as np
+import timeit
 
 from chromosome import Chromosome
 from differential import create_chromosome, diferential_evolution
@@ -51,3 +52,45 @@ def test_dif_func():
                         genes=np.array([-0.01415396, -0.01852149, -0.01292912,  0.00729068,  0.00371603]), run_mode="test")
     chromo.compute_fitness()
     print(f"Rezultat asteptat: {chromo.genes}, Fitness așteptat: {chromo.fitness} (aproximativ in (0.1, 0.8))")
+
+
+############## TESTE EP ################
+
+def test_fitness_best():
+    test_chromo = create_chromosome()
+
+    with open('best.txt', 'r') as f:
+        test_mat = [[int(num) for num in line.split(' ')] for line in f]
+
+    test_chromo.genes = np.array(test_mat)
+
+    execution_time = timeit.timeit(lambda: test_chromo.compute_fitness(),number=1)
+
+    print("\n------------------ Best case ------------------")
+    print(f"Tested matrix: \n{test_chromo.genes}\n Fitness: {test_chromo.fitness}")
+    print(f"Time to execute: {execution_time:f}\n")
+
+
+def test_fitness_worst():
+    test_chromo = create_chromosome()
+
+    with open('worst.txt', 'r') as f:
+        test_mat = [[int(num) for num in line.split(' ')] for line in f]
+
+    test_chromo.genes = np.array(test_mat)
+
+    execution_time = timeit.timeit(lambda: test_chromo.compute_fitness(),number=1)
+
+    print("\n------------------ Worst case ------------------")
+    print(f"Tested matrix: \n{test_chromo.genes}\n Fitness: {test_chromo.fitness}")
+    print(f"Time to execute: {execution_time:f}\n")
+
+
+def test_fitness_average():
+    test_chromo = create_chromosome()
+
+    execution_time = timeit.timeit(lambda: test_chromo.compute_fitness(),number=1)
+    
+    print("\n------------------ Average case ------------------")
+    print(f"Tested matrix: \n{test_chromo.genes}\n Fitness: {test_chromo.fitness}")
+    print(f"Time to execute: {execution_time:f}\n")

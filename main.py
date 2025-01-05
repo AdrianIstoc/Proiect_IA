@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 
 from differential import diferential_evolution
-from tests import test_ideal_mat_fitness, test_rnd_mat_fitness
+from tests import *
 
 biomes = {
     "blue": 0,       # Apa 
@@ -35,4 +35,8 @@ if __name__ == "__main__":
     # # Testeaza functia de fitness pe o harta considerata buna 
     test_ideal_mat_fitness(cmap)
     test_rnd_mat_fitness(cmap)
-    #test_dif_func()
+    test_dif_func()
+
+    test_fitness_best()
+    test_fitness_worst()
+    test_fitness_average()
