@@ -1,5 +1,5 @@
 from typing import List
-from chromosome import Chromosome
+from lib.chromosome import Chromosome
 import random
 import numpy as np
 

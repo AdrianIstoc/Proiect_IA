@@ -79,10 +79,8 @@ class Chromosome:
             #   - Teta(G^2) - in cazul normal
             #
             # G = no_genes
-            self.genes = np.clip(self.genes, 0, 5).astype(int)
-
+            self.genes = np.clip(self.genes, self.min, self.max).astype(int)
             genes = self.genes
-
             fitness = 0
             diversity_penalty = 0
             local_rule_penalty = 0
@@ -120,7 +118,7 @@ class Chromosome:
                                     local_rule_penalty += 30
                                 else:
                                     local_rule_bonus += 2
-                            
+
                             # Regula 3: NU Desert lângă Padure
                             if current_value == 2:
                                 if neighbor_value == 4: 
@@ -162,4 +160,4 @@ class Chromosome:
                     -(fitness + local_rule_bonus) 
                     + diversity_penalty 
                     + local_rule_penalty
-                )
+                    )

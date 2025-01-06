@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 
-from differential import diferential_evolution
-from tests import *
+from lib.differential import diferential_evolution
+from lib.tests import *
 
 biomes = {
     "blue": 0,       # Apa 

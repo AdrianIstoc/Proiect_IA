@@ -2,13 +2,13 @@ from matplotlib import pyplot as plt
 import numpy as np
 import timeit
 
-from chromosome import Chromosome
-from differential import create_chromosome, diferential_evolution
+from lib.chromosome import Chromosome
+from lib.differential import create_chromosome, diferential_evolution
 
 def test_ideal_mat_fitness(cmap):
     test_chromo = create_chromosome()
 
-    with open('ideal.txt', 'r') as f:
+    with open('inputs/ideal.txt', 'r') as f:
         test_mat = [[int(num) for num in line.split(' ')] for line in f]
 
     test_chromo.genes = np.array(test_mat)
@@ -59,7 +59,7 @@ def test_dif_func():
 def test_fitness_best():
     test_chromo = create_chromosome()
 
-    with open('best.txt', 'r') as f:
+    with open('inputs/best.txt', 'r') as f:
         test_mat = [[int(num) for num in line.split(' ')] for line in f]
 
     test_chromo.genes = np.array(test_mat)
@@ -74,7 +74,7 @@ def test_fitness_best():
 def test_fitness_worst():
     test_chromo = create_chromosome()
 
-    with open('worst.txt', 'r') as f:
+    with open('inputs/worst.txt', 'r') as f:
         test_mat = [[int(num) for num in line.split(' ')] for line in f]
 
     test_chromo.genes = np.array(test_mat)
