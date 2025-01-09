@@ -44,9 +44,9 @@ class Mutation:
 
     @staticmethod
     def normal_mutation(MR, population: list[Chromosome]):
-        mutation_mask = np.random.rand(5) < MR 
-        mutations = np.random.uniform(-5.12, 5.12, (5))
         original = population[0]
+        mutation_mask = np.random.rand(original.no_genes**2) < MR 
+        mutations = np.random.uniform(original.min, original.max, (original.no_genes**2))
         donor = np.where(mutation_mask, mutations, original.genes)
         return Chromosome(no_genes=original.no_genes,
                           genes=donor, min=original.min, 
